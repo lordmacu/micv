@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cristian Garcia - Desarrollador Full Stack</title>
+    <style>
+        /* Reset de márgenes y paddings por defecto y ajuste del box-sizing */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilos generales del cuerpo de la página */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; /* Ensures the gradient occupies the entire viewport height */
+            display: flex; /* Allows centering the main content */
+            align-items: center; /* Centers vertically */
+            justify-content: center; /* Centers horizontally */
+            padding: 2rem 0; /* Top and bottom padding for scrolling on small screens */
+        }
+
+        /* Contenedor principal para centrar el CV */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem; /* Reduces padding so it doesn't add to body padding */
+            width: 100%; /* Ensures it occupies the available width */
+        }
+
+        /* Estilos de la tarjeta principal del CV */
+        .cv-card {
+            background: rgba(255, 255, 255, 0.95); /* White background with slight transparency */
+            backdrop-filter: blur(10px); /* Blur effect for the background */
+            border-radius: 20px; /* Rounded borders */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); /* Elegant shadow */
+            overflow: hidden; /* Hides overflowing content, useful for rounded borders */
+        }
+
+        /* Estilos del encabezado del CV */
+        .header {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); /* Dark color gradient */
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 0; /* Ensures content is above the pseudo-element */
+        }
+
+        /* The .header::before pseudo-element has been removed to avoid SVG rendering issues. */
+
+        /* Imagen de perfil con iniciales */
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            position: relative;
+            z-index: 1; /* Ensures it is above the pattern */
+        }
+
+        /* Nombre del candidato */
+        .name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Título o profesión */
+        .title {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Información de contacto */
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap; /* Allows elements to wrap on small screens */
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.3s ease; /* Smooth transition on hover */
+        }
+
+        .contact-item:hover {
+            color: #667eea; /* Hover color */
+            transform: translateY(-2px); /* Lift effect */
+        }
+
+        /* Contenido principal del CV */
+        .content {
+            padding: 2rem;
+        }
+
+        /* Estilos para cada sección del CV */
+        .section {
+            margin-bottom: 3rem;
+            /* Fade-in animation */
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both; /* Maintains the final state of the animation */
+        }
+
+        /* Section titles */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #667eea; /* Bottom line */
+            position: relative;
+        }
+
+        /* Pseudo-element for accent on section title */
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #764ba2; /* Accent color */
+        }
+
+        /* Estilos para el resumen profesional */
+        .summary {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4a5568;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid #667eea; /* Left accent border */
+        }
+
+        /* Grid para las habilidades técnicas */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Categoría de habilidades */
+        .skill-category {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .skill-category h3 {
+            color: #1a202c;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Etiquetas de habilidades */
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Item de experiencia */
+        .experience-item {
+            background: white;
+            margin-bottom: 1.5rem;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .experience-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .job-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .company {
+            font-size: 1.1rem;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .duration {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .job-description {
+            color: #4a5568;
+            line-height: 1.7;
+        }
+
+        /* Grid for certifications */
+        .certifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .cert-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .cert-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .cert-name {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .cert-provider {
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+
+        /* Languages */
+        .languages {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .language-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            text-align: center;
+            min-width: 150px;
+            transition: all 0.3s ease;
+        }
+
+        .language-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .language-name {
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .language-level {
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0; /* Initially hidden */
+            visibility: hidden; /* Initially hidden */
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1; /* Visible when activated */
+            visibility: visible; /* Visible when activated */
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Two-column layout for experience sections */
+        .experience-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start; /* Aligns content at the top of each column */
+        }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 1024px) { /* Adjust breakpoint for two columns */
+            .experience-columns {
+                grid-template-columns: 1fr; /* Single column on smaller screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0; /* Adjust padding for mobile */
+                align-items: flex-start; /* Deactivates vertical centering to allow scrolling */
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .header {
+                padding: 2rem 1rem;
+            }
+
+            .name {
+                font-size: 2rem;
+            }
+
+            .contact-info {
+                gap: 1rem;
+            }
+
+            .job-header {
+                flex-direction: column;
+                align-items: start;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr; /* Single column for skills on mobile */
+            }
+        }
+
+        /* Keyframes for fade-in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cv-card">
+            <header class="header">
+                <div class="profile-img">CG</div>
+                <h1 class="name">Cristian Garcia</h1>
+                <p class="title">Desarrollador Full Stack | Especialista en Aplicaciones Web y Móviles</p>
+                <div class="contact-info">
+                    <a href="mailto:informacion@cristiangarcia.co" class="contact-item">
+                        <span>📧</span>
+                        <span>informacion@cristiangarcia.co</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/lordmacu" class="contact-item" target="_blank">
+                        <span>💼</span>
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="https://github.com/lordmacu" class="contact-item" target="_blank">
+                        <span>🐙</span>
+                        <span>GitHub</span>
+                    </a>
+                    <div class="contact-item">
+                        <span>📍</span>
+                        <span>Bogotá, Colombia</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <section class="section">
+                    <h2 class="section-title">Resumen Profesional</h2>
+                    <div class="summary">
+                        Con más de <strong>17 años de experiencia</strong> como Desarrollador Full Stack, me especializo en la creación de soluciones robustas tanto en el <strong>desarrollo web y móvil multiplataforma</strong> como en <strong>arquitecturas backend escalables</strong>. Mi trayectoria abarca desde el diseño de APIs RESTful y microservicios con PHP, Node.js y .NET, hasta la construcción de interfaces fluidas con React, Vue.js, Flutter y React Native. He participado activamente en la gestión de proyectos, aplicando metodologías ágiles como <strong>Scrum</strong> en entornos de equipos tanto grandes como pequeños.
+                        <br><br>
+                        Siempre me ha motivado <strong>investigar, aprender y descubrir nuevas tecnologías</strong> para aplicarlas en proyectos desafiantes. He contribuido en el desarrollo de aplicaciones para banca, eSports, gestión empresarial y plataformas de streaming para clientes como Skandia México, Claro Video y el Gobierno de Buenos Aires, enfocándome siempre en la innovación y el rendimiento.
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Habilidades Técnicas</h2>
+                    <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3>🔧 Backend Development</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">PHP</span>
+                            <span class="skill-tag">Laravel</span>
+                            <span class="skill-tag">Zend Framework</span>
+                            <span class="skill-tag">Drupal</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">APIs RESTful</span>
+                            <span class="skill-tag">Microservicios</span>
+                            <span class="skill-tag">.NET Framework</span>
+                            <span class="skill-tag">C#</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3>📱 Mobile Development</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Flutter</span>
+                            <span class="skill-tag">React Native</span>
+                            <span class="skill-tag">Dart</span>
+                            <span class="skill-tag">Appcelerator</span>
+                            <span class="skill-tag">iOS</span>
+                            <span class="skill-tag">Android</span>
+                            <span class="skill-tag">Cross-platform</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3>🌐 Frontend & Web</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Vue.js</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">TypeScript</span>
+                            <span class="skill-tag">WordPress</span>
+                            <span class="skill-tag">HTML5/CSS3</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3>⛓️ Blockchain & Web3</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Web3</span>
+                            <span class="skill-tag">Smart Contracts</span>
+                            <span class="skill-tag">Crypto Wallets</span>
+                            <span class="skill-tag">Multi-chain</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3>🛢️ Database & DevOps</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Database Design</span>
+                            <span class="skill-tag">MySQL</span>
+                            <span class="skill-tag">MongoDB</span>
+                            <span class="skill-tag">SQL Server</span>
+                            <span class="skill-tag">Git</span>
+                            <span class="skill-tag">CI/CD</span>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Experiencia Profesional (Roles Formales)</h2>
+                    <div class="experience-columns">
+                        <div>
+                            <h3>⚙️ Desarrollo Backend</h3>
+                            <div class="experience-item">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">Desarrollador Full Stack Backend (Ansira & SproutLoud)</div>
+                                        <div class="company">Ansira</div>
+                                    </div>
+                                    <div class="duration">Feb 2022 - Presente</div>
+                                </div>
+                                <p class="job-description">
+                                    Como parte del equipo de Ansira, que adquirió SproutLoud Media Networks, he desarrollado arquitecturas backend robustas y sistemas de alta disponibilidad. Esto incluye <strong>APIs RESTful</strong> y <strong>microservicios</strong> para aplicaciones empresariales de gran escala, optimizando bases de datos relacionales y utilizando <strong>Zend Framework, Drupal, Laravel</strong> y .NET Framework/C#. También implementé soluciones para plataformas de marketing digital y herramientas de automatización.
+                                </p>
+                            </div>
+                            <div class="experience-item">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">Senior PHP - Node Programmer</div>
+                                        <div class="company">Opratel (Argentina)</div>
+                                    </div>
+                                    <div class="duration">Feb 2016 - Ene 2019</div>
+                                </div>
+                                <p class="job-description">
+                                    Desarrollé la plataforma backend para eSports y sistemas internos de gestión. Implementé <strong>APIs</strong> para torneos en línea, un sistema de rankings, procesamiento de pagos, e integración con plataformas de streaming. Mis herramientas principales fueron <strong>PHP Laravel</strong>, <strong>React</strong>, <strong>Vue</strong> y <strong>Node.js</strong> para tareas específicas. Este rol fue concurrente con el desarrollo de la aplicación móvil de la misma empresa.
+                                </p>
+                            </div>
+                            <div class="experience-item">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">PHP Developer Backend</div>
+                                        <div class="company">BairesDev - Claro Video</div>
+                                    </div>
+                                    <div class="duration">Jul 2014 - Ene 2016</div>
+                                </div>
+                                <p class="job-description">
+                                    Desarrollé y mantuve el backend de <strong>Claro Video</strong>, una plataforma de streaming líder en América Latina. Implementé sistemas de gestión de contenido multimedia, <strong>APIs de catálogo</strong>, integración con CDNs, un sistema de suscripciones y módulos de analíticas, utilizando <strong>PHP Zend Framework</strong> y <strong>Laravel</strong>.
+                                </p>
+                            </div>
+
+                            <div class="experience-item">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">Sr. PHP Developer Backend</div>
+                                        <div class="company">Avantrip.com</div>
+                                    </div>
+                                    <div class="duration">Jul 2013 - Jun 2014</div>
+                                </div>
+                                <p class="job-description">
+                                    Desarrollé la plataforma backend para <strong>Avantrip.com</strong>, una agencia de viajes online. Implementé sistemas de reservas, integración con <strong>APIs</strong> de aerolíneas y hoteles, un motor de búsqueda de vuelos, procesamiento de pagos internacionales y un sistema de gestión de inventario turístico, utilizando <strong>PHP Laravel</strong> en el backend y <strong>Vue</strong> y <strong>React</strong> en el frontend.
+                                </p>
+                            </div>
+
+                            <div class="experience-item">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">PHP Developer</div>
+                                        <div class="company">Athletic</div>
+                                    </div>
+                                    <div class="duration">Jul 2007 - Jun 2009</div>
+                                </div>
+                                <p class="job-description">
+                                    Desarrollé un sistema contable integral utilizando <strong>Zend Framework</strong> para Athletic. Mi rol incluyó el diseño y la implementación de módulos para la gestión financiera, reportes contables y automatización de procesos, asegurando la robustez y eficiencia del sistema.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3>📱 Desarrollo Móvil</h3>
+                            <div class="experience-item">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">Desarrollador Móvil (Flutter)</div>
+                                        <div class="company">Skandia México</div>
+                                    </div>
+                                    <div class="duration">Feb 2019 - Ene 2022</div>
+                                </div>
+                                <p class="job-description">
+                                    Lideré el desarrollo de la aplicación móvil para <strong>Skandia México</strong>, una de las plataformas financieras más grandes. Implementé sistemas de billetera digital, APIs de inversión y reportería financiera utilizando <strong>Flutter</strong>, optimizando la experiencia móvil para transacciones seguras y eficientes.
+                                </p>
+                            </div>
+                            <div class="experience-item">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">Desarrollador de Aplicaciones (React Native)</div>
+                                        <div class="company">Opratel (Argentina)</div>
+                                    </div>
+                                    <div class="duration">Feb 2016 - Ene 2019</div>
+                                </div>
+                                <p class="job-description">
+                                    En este rol, desarrollé una aplicación móvil con <strong>React Native</strong> para la plataforma de eSports de <strong>Opratel</strong>. Esta aplicación se alimentaba del sistema backend hecho en <strong>PHP</strong>, permitiendo a los jugadores visualizar en tiempo real las estadísticas de sus personajes y resultados de torneos. Mi contribución optimizó las experiencias de torneos en línea y la gestión de perfiles de jugadores.
+                                </p>
+                            </div>
+                            <div class="experience-item">
+                                <div class="job-header">
+                                    <div>
+                                        <div class="job-title">Programador de Aplicaciones Móviles (Appcelerator)</div>
+                                        <div class="company">Grupo i33</div>
+                                    </div>
+                                    <div class="duration">Jul 2009 - Jun 2013</div>
+                                </div>
+                                <p class="job-description">
+                                    Desarrollé diversas aplicaciones móviles multiplataforma utilizando <strong>Appcelerator Titanium</strong> para una variedad de clientes, incluyendo proyectos para <strong>PlayStation</strong>, <strong>Coca-Cola</strong> y cadenas de restaurantes. Mi trabajo se centró en la creación de interfaces de usuario y la integración de funcionalidades específicas del cliente.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Proyectos Destacados (Freelance)</h2>
+                    <!-- Sorted by most recent to oldest -->
+                    <div class="experience-item">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Desarrollo de Aplicación de Pagos Móviles (React Native)</div>
+                                <div class="company">Paymon</div>
+                            </div>
+                            <div class="duration">Ene 2021 - Jun 2024</div>
+                        </div>
+                        <p class="job-description">
+                            Diseñé y desarrollé una aplicación móvil de pagos digitales con <strong>React Native</strong>, implementando funcionalidades transaccionales seguras y una interfaz de usuario fluida, optimizando la experiencia para el manejo de pagos en diversas plataformas.
+                        </p>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Desarrollo de Billetera Cripto Web3 (Flutter)</div>
+                                <div class="company">BankSocial (Estados Unidos)</div>
+                            </div>
+                            <div class="duration">Ago 2021 - Dic 2022</div>
+                        </div>
+                        <p class="job-description">
+                            Desarrollé una <strong>billetera cripto multi-chain de autocustodia</strong> para activos digitales en <strong>BankSocial (Estados Unidos)</strong>, utilizando <strong>Flutter</strong>. Fui responsable de implementar funcionalidades críticas como el envío/recepción de tokens BSL, gestión de direcciones, intercambio descentralizado (DEX) y visualización de datos en tiempo real, logrando un lanzamiento exitoso con excelentes valoraciones.
+                        </p>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Desarrollo de Marketplace Inmobiliario Móvil (React Native)</div>
+                                <div class="company">Alquiler Directo</div>
+                            </div>
+                            <div class="duration">Nov 2021 - Mar 2022</div>
+                        </div>
+                        <p class="job-description">
+                            Lideré el desarrollo de la aplicación móvil del marketplace inmobiliario <strong>Alquiler Directo</strong> con <strong>React Native</strong>. Implementé un sistema robusto de búsqueda y visualización de propiedades, facilitando el contacto directo entre usuarios y la gestión eficiente de listados, optimizando la navegación para el sector.
+                        </p>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Desarrollo de Aplicación de Banca Móvil (React Native)</div>
+                                <div class="company">Coopeuch</div>
+                            </div>
+                            <div class="duration">Jun 2021 - Oct 2021</div>
+                        </div>
+                        <p class="job-description">
+                            Participé en el desarrollo de la aplicación de banca móvil cooperativa para <strong>Coopeuch</strong> utilizando <strong>React Native</strong>. Me enfoqué en la integración de servicios financieros y la optimización de la gestión de cuentas, mejorando la experiencia del usuario para transacciones bancarias seguras y eficientes.
+                        </p>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Desarrollo de Soluciones de Gestión Empresarial (Flutter)</div>
+                                <div class="company">Pegasi (Colombia)</div>
+                            </div>
+                            <div class="duration">Jun 2020 - Dic 2021</div>
+                        </div>
+                        <p class="job-description">
+                            Creé soluciones móviles avanzadas para la gestión empresarial en <strong>Pegasi (Colombia)</strong> con <strong>Flutter</strong>, enfocándome en la automatización de procesos de negocio. Desarrollé aplicaciones para la administración integral de flujos de trabajo (workflows), integrándolas con sistemas ERP y diseñando interfaces intuitivas para procesos complejos.
+                        </p>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Desarrollo de Aplicación Híbrida de Coworking (Flutter - Adopción Temprana)</div>
+                                <div class="company">Meetwork.app</div>
+                            </div>
+                            <div class="duration">Mar 2019 - Feb 2020</div>
+                        </div>
+                        <p class="job-description">
+                            Como fundador y líder técnico, desarrollé la aplicación móvil de <strong>Meetwork.app</strong> utilizando <strong>Flutter</strong> para la reserva de mesas en tiempo real, transformando espacios en coworking. Fue una <strong>adopción muy temprana de Flutter</strong> (antes de su lanzamiento estable). Este proyecto fue reconocido con un premio de <strong>Startup Chile</strong>, destacando su innovación y potencial. Complementariamente, participé en el desarrollo del backend con <strong>Laravel</strong>.
+                        </p>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Desarrollador Backend (Node - Angular)</div>
+                                <div class="company">Gobierno de la Ciudad de Buenos Aires</div>
+                            </div>
+                            <div class="duration">Ago 2017 - Jul 2018</div>
+                        </div>
+                        <p class="job-description">
+                            Desarrollé herramientas y soluciones backend para la administración pública de Buenos Aires. Implementé sistemas de gestión ciudadana, <strong>APIs</strong> para servicios públicos, e integración con bases de datos gubernamentales, además de portales de transparencia, utilizando <strong>Node.js</strong> y Angular.
+                        </p>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Desarrollo de Plataforma Educativa Móvil (Appcelerator)</div>
+                                <div class="company">Ceinfes</div>
+                            </div>
+                            <div class="duration">Dic 2014 - Feb 2015</div>
+                        </div>
+                        <p class="job-description">
+                            Desarrollé una plataforma educativa móvil para <strong>Ceinfes</strong> en <strong>Appcelerator</strong>, virtualizando libros de aprendizaje interactivos en tablets. Creé un lector con funcionalidades multimedia, notas, marcadores, sincronización offline y seguimiento de progreso de estudiantes.
+                        </p>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">Desarrollo de Aplicación Móvil Agrícola (Appcelerator)</div>
+                                <div class="company">Ekocampo</div>
+                            </div>
+                            <div class="duration">Sep 2014 - Nov 2014</div>
+                        </div>
+                        <p class="job-description">
+                            Desarrollé una aplicación móvil para <strong>Ekocampo</strong> con <strong>Appcelerator</strong>, destinada a la gestión integral de fincas y cultivos. Implementé módulos para control de inventarios, seguimiento de cosechas, administración de personal rural y reportes analíticos, incluyendo soporte offline para zonas sin conectividad.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Certificaciones</h2>
+                    <div class="certifications-grid">
+                        <div class="cert-item">
+                            <div class="cert-name">Introduction to Programming With C#</div>
+                            <div class="cert-provider">Microsoft (2025)</div>
+                        </div>
+                        <div class="cert-item">
+                            <div class="cert-name">Back-End Development with .NET</div>
+                            <div class="cert-provider">Microsoft</div>
+                        </div>
+                        <div class="cert-item">
+                            <div class="cert-name">Master en Programación Avanzada en Dart</div>
+                            <div class="cert-provider">Udemy (2019)</div>
+                        </div>
+                        <div class="cert-item">
+                            <div class="cert-name">Experto en Desarrollo de Apps con Flutter</div>
+                            <div class="cert-provider">Udemy (2018-2019)</div>
+                        </div>
+                        <div class="cert-item">
+                            <div class="cert-name">The Web Developer Bootcamp</div>
+                            <div class="cert-provider">Udemy (2017)</div>
+                        </div>
+                        <div class="cert-item">
+                            <div class="cert-name">Full Stack Web Development Certification</div>
+                            <div class="cert-provider">Free Code Camp (2016-2017)</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Idiomas</h2>
+                    <div class="languages">
+                        <div class="language-item">
+                            <div class="language-name">Español</div>
+                            <div class="language-level">Nativo</div>
+                        </div>
+                        <div class="language-item">
+                            <div class="language-name">Inglés</div>
+                            <div class="language-level">Profesional</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">Reconocimientos</h2>
+                    <div class="certifications-grid">
+                        <div class="cert-item">
+                            <div class="cert-name">Bogotá Piensa TIC</div>
+                            <div class="cert-provider">Reconocimiento por innovación tecnológica</div>
+                        </div>
+                        <div class="cert-item">
+                            <div class="cert-name">Premio Innovación INPAHU</div>
+                            <div class="cert-provider">Institución Universitaria INPAHU</div>
+                        </div>
+                        <div class="cert-item">
+                            <div class="cert-name">Startup Chile Award</div>
+                            <div class="cert-provider">Reconocimiento por Meetwork.app</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div class="scroll-to-top" onclick="scrollToTop()">
+        ↑
+    </div>
+
+    <script>
+        // Functionality for scroll to top button
+        window.addEventListener('scroll', function() {
+            const scrollToTop = document.querySelector('.scroll-to-top');
+            if (window.pageYOffset > 300) {
+                scrollToTop.classList.add('visible');
+            } else {
+                scrollToTop.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add loading animation for a smooth transition
+        window.addEventListener('load', function() {
+            // Set initial opacity and transition when the page loads
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-in';
+            // Small delay to ensure opacity is applied before transitioning to 1
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
